@@ -32,6 +32,7 @@ $pokemonEvolutionThree = isset($evolutionsApi['chain']['evolves_to'][0]['evolves
        $pokemonImage2 = isset($Secondevolution['sprites']['front_default']) ? $Secondevolution['sprites']['front_default']:'';
        $Firstevolution = json_decode(file_get_contents(pokemonApi_url.$pokemonEvolutionOne),true);
        $pokemonImage1 = $Firstevolution['sprites']['front_default'];
+
    }
  elseif($pokemonEvolutionTwo !== null && $pokemonEvolutionThree !== null) {
      $Secondevolution = json_decode(file_get_contents(pokemonApi_url.$pokemonEvolutionTwo),true);
@@ -44,7 +45,6 @@ $pokemonEvolutionThree = isset($evolutionsApi['chain']['evolves_to'][0]['evolves
 else {
     $pokemonImage1 = $pokemon['sprites']['front_default'];
 }
-
 
 $nextPokemon = $pokemon['id'] +1;
 
