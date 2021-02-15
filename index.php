@@ -2,7 +2,6 @@
 
 if (!isset($_GET['search'])){
     $search = 1;
-
 }
 else {
      $search = $_GET['search'];
@@ -20,23 +19,42 @@ $pokemonMovesArray = $pokemon['moves'];
 $slicedMoves = array_slice($pokemonMovesArray, 0,4);
 $pokemonText = $pokemon['name'].'<br>'. 'ID: '.$pokemon['id'].'<br>';
 
-$pokemonEvolutionOne = $speciesApi["evolves_to"][0];
-$pokemonEvolutionTwo = $evolutionsApi['chain']['evolves_from_species'][0];
-$pokemonEvolutionThree = $evolutionsApi['chain']['evolves_from_species'][1];
+$pokemonEvolutionOne = $evolutionsApi['chain']['species']['name'];
+$pokemonEvolutionTwo =  isset($evolutionsApi['chain']['evolves_to'][0]['species']['name']) ? $evolutionsApi['chain']['evolves_to'][0]['species']['name']:null ;
+$pokemonEvolutionThree = isset($evolutionsApi['chain']['evolves_to'][0]['evolves_to'][0]['species']['name']) ? $evolutionsApi['chain']['evolves_to'][0]['evolves_to'][0]['species']['name']:null;
 
    foreach($slicedMoves AS $moves){
        $pokemonText.= $moves['move']['name'].', ';
    }
 
-   <?php if(empty($pokemonEvolutionTwo)): ?>
-  /*$first_condition is true*/ echo <div id="second-pokemon">""</div>;
-<?php elseif ($second_condition): ?>
-  /*$first_condition is false and $second_condition is true*/echo $pokemon['sprites']['front_default'];
-<?php else: ?>
-  /*$first_condition and $second_condition are false*/
-<?php endif; ?>
+   if($pokemonEvolutionTwo !== null && $pokemonEvolutionThree == null) {
+       $Secondevolution = json_decode(file_get_contents(pokemonApi_url.$pokemonEvolutionTwo),true);
+       $pokemonImage2 = isset($Secondevolution['sprites']['front_default']) ? $Secondevolution['sprites']['front_default']:'';
+       $Firstevolution = json_decode(file_get_contents(pokemonApi_url.$pokemonEvolutionOne),true);
+       $pokemonImage1 = $Firstevolution['sprites']['front_default'];
+   }
+ elseif($pokemonEvolutionTwo !== null && $pokemonEvolutionThree !== null) {
+     $Secondevolution = json_decode(file_get_contents(pokemonApi_url.$pokemonEvolutionTwo),true);
+     $pokemonImage2 = isset($Secondevolution['sprites']['front_default']) ? $Secondevolution['sprites']['front_default']:'';
+     $Thirdevolution = json_decode(file_get_contents(pokemonApi_url.$pokemonEvolutionThree),true);
+     $pokemonImage3 = isset($Thirdevolution['sprites']['front_default']) ? $Thirdevolution['sprites']['front_default']:'';
+     $Firstevolution = json_decode(file_get_contents(pokemonApi_url.$pokemonEvolutionOne),true);
+     $pokemonImage1 = $Firstevolution['sprites']['front_default'];
+ }
+else {
+    $pokemonImage1 = $pokemon['sprites']['front_default'];
+}
 
 
+$nextPokemon = $pokemon['id'] +1;
+
+
+if($pokemon['id'] < 1){
+    $previousPokemon = 1;
+}
+else {
+    $previousPokemon = $pokemon['id'] -1;
+}
 
 ?>
 
@@ -81,24 +99,27 @@ $pokemonEvolutionThree = $evolutionsApi['chain']['evolves_from_species'][1];
     <div class="pokedex-bg-button"></div>
     <div class="button-line"></div>
     <div class="pokedex-bg-button2"></div>
-    <div id="run" class="pokedex-button">
+    <form action="" method="get">
+    <div id="run" class="pokedex-button" name="run">
     </div>
+    </form>
     <div class="deco1">
         <div class="deco-button"></div>
     </div>
     <div class="deco2">
         <div class="deco-button"></div>
     </div>
-    <div id ="next" class="next-button"></div>
-    <div id ="prev" class="prev-button"></div>
+    <a id ="next" class="next-button" href="http://pokedex.local/?search=<?php echo $nextPokemon;?>"></a>
+    <a id ="prev" class="prev-button" href="http://pokedex.local/?search=<?php echo $previousPokemon;?>"></a>
     <div class="switch-button"></div>
-    <div id="first-pokemon"></div>
-    <?php echo $pokemonEvolutionOne.$pokemonImage;?>
+    <div id="first-pokemon">
+        <img id='sprites' src= '<?php echo $pokemonImage1; ?>' alt='pokemonImage'>
+    </div>
     <div id="second-pokemon">
-        <?php echo $pokemonEvolutionTwo.$pokemonImage;?>
+        <img id='sprites' src= '<?php echo $pokemonImage2;?>' alt='pokemonImage'>
     </div>
     <div id="third-pokemon">
-        <?php echo $pokemonEvolutionThree.$pokemonImage;?>
+        <img id='sprites' src= '<?php echo $pokemonImage3;?>' alt='pokemonImage'>
     </div>
 </div>
 
