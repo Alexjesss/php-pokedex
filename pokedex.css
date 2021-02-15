@@ -272,22 +272,22 @@ body {
     top: 1px;
 }
 
+
 .next-button, .prev-button {
     background-color: #89c55d;
     border-radius: 50%;
     height: 22px;
     width: 22px;
-    position: relative;
+    position: absolute;
     cursor: pointer;
 }
-
 .prev-button {
     left: 329px;
-    top: -780px;
+    top: 141px;
 }
 
 .next-button {
-    top: -772px;
+    top: 124px;
     left: 365px;
 }
 
@@ -330,8 +330,8 @@ p {
 #first-pokemon, #second-pokemon, #third-pokemon {
 
     position: relative;
-    top: -775px;
-    left: 20px;
+    top: -736px;
+    left: -116px;
     width: 60px;
     height: 40px;
     display: inline-block;
